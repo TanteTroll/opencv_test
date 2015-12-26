@@ -1,0 +1,31 @@
+#include "webcam.h"
+
+#include <QtMultimedia>
+#include <QtMultimedia/QCameraImageCapture>
+
+Webcam::Webcam(QObject *parent) : QObject(parent)
+{
+
+}
+
+bool Webcam::checkCameraAvailability()
+{
+    if (QCameraInfo::availableCameras().count() > 0)
+        return true;
+    else
+        return false;
+}
+
+QImage Webcam::getsinglePicture()
+{
+    QCamera camera();
+
+    QCameraImageCapture imageCapture();
+
+    camera.setCaptureMode(QCamera::Capturevideo);
+    camera.start(); // Viewfinder frames start flowing
+
+    //on shutter button released
+    camera->unlock();
+
+}
