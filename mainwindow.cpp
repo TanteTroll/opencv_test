@@ -23,23 +23,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if (QCameraInfo::availableCameras().count() > 0)
     {
         //Kamera auswählen
-         QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-         camera= new QCamera(cameras[0]);
-         //thumbnail
-         viewfinder= new QCameraViewfinder(ui->page);
-         viewfinder->show();
-         //camera->setViewfinder(viewfinder);
-         //großes Bild über regelmäßigen VideoCapture
-         imageCapture = new QCameraImageCapture(camera);
-         connect(imageCapture, SIGNAL(imageCaptured(int,QImage)), this, SLOT(setaktivesBild(int,QImage)));
-
-
-         videoWidget = new QVideoWidget();
-         videoWidget->setFixedSize(640,480);
-         camera->setViewfinder(videoWidget);
-
-        QTimer::singleShot( 200, this, SLOT( mytimerslot(  ) ) );
+        QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+        camera= new QCamera(cameras[0]);
+        videoWidget = new QVideoWidget();
+        videoWidget->setFixedSize(640,480);
+        camera->setViewfinder(videoWidget);
         camera->start();
+        QTimer::singleShot( 200, this, SLOT( mytimerslot(  ) ) );
     }
 }
 
@@ -90,7 +80,6 @@ void MainWindow::setaktivesBild(QImage img)
     //Bildausgabe
     MainWindow::aktivesBild = img;
     ui->label_image->setPixmap(QPixmap::fromImage(img));
-
 }
 
 
