@@ -18,6 +18,9 @@
 #include <QFileDialog>
 #include <QString>
 
+/// <summary>
+/// Initialisiert das GUI
+/// </summary>
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     //Init Visibility
@@ -25,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->edges_hide_1->setVisible(false);
     ui->edges_hide_2->setVisible(false);
     ui->surf_hide->setVisible(false);
-    ui->widget_13->setVisible(false);
+    ui->groupBox_13->setVisible(false);
 
     this->changeLeftWidget(ui->toolBox->currentIndex());
 
@@ -50,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             this, &MainWindow::Page4_DB_loadFromFile);
 
 
-    // get Camera Picture
+    // Init Kamera
     if (QCameraInfo::availableCameras().count() > 0)
     {
         //Kamera auswählen
@@ -60,33 +63,36 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         videoWidget->setFixedSize(640,480);
         camera->setViewfinder(videoWidget);
         camera->start();
+
+        //Timer für Kameraaufnahme
         QTimer::singleShot( 200, this, SLOT( getPicture_Intervall(  ) ) );
     }
 }
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-void MainWindow::Page4_BD_Accept()
-{
-    db->addEntry();
-    db->paintDatabase(ui->tableWidget);
-}
+/// <summary>
+/// für Bildaufnahme so bald wie möglich
+/// </summary>
 void MainWindow::paintEvent(QPaintEvent *)
 {
-    //für Bildaufnahme so bald wie möglich
     if (ui->box_Screenrefresh->isChecked())
         setActivePic( videoWidget->grab().toImage() );
 }
+
 void MainWindow::getPicture_Intervall( )
+//für Bildaufnahme mit vorgegebenem Intervall
 {
-    //für Bildaufnahme mit vorgegebenem Intervall
     if (ui->box_Screenrefresh->isChecked() == false )
         setActivePic( videoWidget->grab().toImage() );
     QTimer::singleShot(ui->fspAuswahl->value(), this, SLOT(getPicture_Intervall( )));
 }
+
 void MainWindow::changeLeftWidget(const int &num )
+// für Hauptfenster abhängig von ausgewählter Seite
 {
     switch (num)
     {
@@ -105,46 +111,63 @@ void MainWindow::changeLeftWidget(const int &num )
             ui->ContentWidget_Video->setVisible(true);
     }
 }
+
 void MainWindow::Page4_DB_getFilepath()
+//Bild für DB auswählen und an datenbank.h schicken
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Image"), "C:\Users\Konstantin\Pictures", tr("Image Files (*.png *.jpg *.bmp)"));
+        tr("Open Image"), "C:\\Users\\Konstantin\\Pictures", tr("Image Files (*.png *.jpg *.bmp)"));
 
+    //Ui anpassen
     ui->LineDB_pathToFile->setText(fileName);
     db->prepareEntry(fileName);
     db->prepareEntrySetName(ui->LineDB_EntryName->text());
     db->prepareEntrySetDescription(ui->LineDB_EntryDescription->toPlainText() );
-
     Page4_DB_drawEntry (db->getCurrentEntry());
-
 }
+
+void MainWindow::Page4_BD_Accept()
+//Datenbankeintrag bestätigen
+{
+
+    db->addEntry();
+    db->paintDatabase(ui->tableWidget);
+}
+
 void MainWindow::Page4_BD_Desc()
+//Text: "Beschreibung" (des Eintrages)
 {
     db->prepareEntrySetDescription(ui->LineDB_EntryDescription->toPlainText() );
     ui->DBView_SingleEntry_Data_Text->setText(ui->LineDB_EntryDescription->toPlainText());
-
 }
+
 void MainWindow::Page4_BD_Name()
+//Text: "Name" (des Eintrages)
 {
     db->prepareEntrySetName(ui->LineDB_EntryName->text());
     ui->DBView_SingleEntry_Data_Name->setText(ui->LineDB_EntryName->text());
 }
-void MainWindow::Page4_DB_drawEntry(Entry e)
-{
-    ui->DBView_SingleEntry_Picture->setPixmap(QPixmap::fromImage(e.icon));
 
+void MainWindow::Page4_DB_drawEntry(Entry e)
+//einzelnen Eintrag über der Datenbank anzeigen
+{
+    //Bild
+    ui->DBView_SingleEntry_Picture->setPixmap(QPixmap::fromImage(e.icon));
+    // feature Point
     QString strTmp = QString::number(e.paraSURF.featurePoints.size() ) ;
     ui->DBView_SingleEntry_Data_SURFFP->setText("Anzahl Punkte: " + strTmp);
-
+    //descriptor
     strTmp = QString::number(e.paraSURF.descriptor.rows) +
             " x " + QString::number(e.paraSURF.descriptor.cols) ;
     ui->DBView_SingleEntry_Data_SURFDESC->setText("Matrixgroeße: " + strTmp);
-
+    //Name
     ui->DBView_SingleEntry_Data_Name->setText(e.name);
-
+    //Beschreibung
     ui->DBView_SingleEntry_Data_Text->setText(e.data);
 }
+
 void MainWindow::Page4_DB_drawEntry2(int row, int col)
+//einzelnen Eintrag aus Datenbank anzeigen
 {
     if (ui->Radio_Database->isChecked())
     {
@@ -152,12 +175,16 @@ void MainWindow::Page4_DB_drawEntry2(int row, int col)
         ui->deleteFileNumber->setText(QString::number(row));
     }
 }
+
 void MainWindow::Page4_DB_deleteDBEntry()
+// Datenbankeintrag löschen, (atm. :index aus ui)
 {
     int index = ui->deleteFileNumber->text().toInt();
-    if (db->deleteDbEntry(index))
-        ui->tableWidget->removeRow(index);
+    if ( index > 0 && index < db->getDbSize())
+        if (db->deleteDbEntry(index))
+            ui->tableWidget->removeRow(index);
 }
+
 void MainWindow::Page4_DB_saveToFile()
 {
     db->saveToFile();
@@ -168,8 +195,6 @@ void MainWindow::Page4_DB_loadFromFile()
     db->loadDB();
     db->paintDatabase(ui->tableWidget);
 }
-
-//"Main"
 void MainWindow::setActivePic(QImage img)
 {
     //Bildaufnahme
@@ -204,11 +229,38 @@ void MainWindow::setActivePic(QImage img)
     /// mit Datenbankabgleich
     if (ui->page_objektrec->isVisible()  )
     {
-        static ObjectRecog* ore = new ObjectRecog();
-        ore->setPicture(img);
-        ore->calcGrayscale();
-        ore->calcFeature();
-        img = ore->getPic_feature();
+
+        static ObjectRecog* objre = new ObjectRecog();
+        objre->setPicture(img);
+        objre->setMinDist(ui->ObjectRec_minDist->value());
+        objre->setMinHessian(ui->ObjectRec_nimHessian->value());
+        objre->calcGrayscale();
+        objre->calcFeature();
+        db->loadDB();
+        objre->searchInDB(db->getDescriptor());
+        img = objre->getPic_feature();
+
+        std::vector<cv::DMatch> *Hits = new std::vector<cv::DMatch>;
+        int posOfMatch = objre->getPositionOfGoodMatch(0, Hits);
+        if ( posOfMatch < 0 )
+        {
+            qDebug ("nothing found");
+            ui->ObjectRec_Disc->setText("");
+            ui->ObjectRec_Name->setText("");
+            ui->ObjectRec_NumMatch->setText("Anzahl Übereinstimmungen: 0");
+            ui->ObjectRec_pic->setVisible(false);
+        }
+        else
+        {
+            Entry ent;
+            ent = db->getEntry(posOfMatch);
+            ui->ObjectRec_Name->setText(ent.name);
+            ui->ObjectRec_Disc->setText(ent.data);
+            ui->ObjectRec_pic->setVisible(true);
+            ui->ObjectRec_pic->setPixmap(QPixmap::fromImage(ent.icon));
+            ui->ObjectRec_NumMatch->setText("Anzahl Übereinstimmungen: " + QString::number(Hits->size()));
+        }
+
     }
     //Bildausgabe
     MainWindow::aktivesBild = img;

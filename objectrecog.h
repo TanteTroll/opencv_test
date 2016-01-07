@@ -9,7 +9,7 @@
 #include "opencv2/opencv.hpp"
 
 enum FeatureMode {SURF};
-enum PaintMode {ALL, NONE, VIDEO, FPOINT};
+enum PaintMode {ALL, NONE, FPOINT, MATCHES};
 
 
 
@@ -25,7 +25,10 @@ public:
     void setPaintMode(PaintMode Mode);
     void setFeatureMode(FeatureMode Mode);
     void setMinHessian(int minH);
+    void setMinDist(double input);
 
+    int getPositionOfGoodMatch(int index, std::vector< cv::DMatch > *Hits);
+    int getPositionOfGoodMatch(int index);
     QImage getPic_video();
     QImage getPic_feature();
     std::vector<cv::KeyPoint> getKeypoints();
@@ -34,8 +37,8 @@ public:
     void calcGrayscale();
     cv::Mat calcGrayscale(cv::Mat img);
     void calcFeature();
-
-
+    void searchInDB(std::vector < cv::Mat > object_descriptors );
+    std::vector< std::vector< std::pair <int , cv::DMatch> > > goodMatches;
 
 private:
     int minHessian = 400;
@@ -47,14 +50,10 @@ private:
     cv::Mat cv_feature;
     QImage pic_video;
     QImage pic_feature;
+    double min_dist = 10;
 
-    std::vector<cv::KeyPoint> keypoints_object;
     std::vector<cv::KeyPoint> keypoints_scene;
-
-    cv::Mat descriptors_object, descriptors_scene;
-
-
-
+    cv::Mat descriptors_scene;
 
 signals:
 

@@ -38,7 +38,7 @@ RESOURCES += \
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../opencv/build_new/lib/ -lopencv_core310 \
--lopencv_features2d310 -lopencv_highgui310 -lopencv_xfeatures2d310 -lopencv_imgproc310
+-lopencv_features2d310 -lopencv_highgui310 -lopencv_xfeatures2d310 -lopencv_imgproc310 -lopencv_flann310
 
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../opencv/build_new/lib/ -lopencv_core310d
 else:unix: LIBS += -L$$PWD/../../../../opencv/build_new/lib/ -lopencv_core310

@@ -18,12 +18,10 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     QImage aktivesBild;
-
 
 private:
     Ui::MainWindow *ui;
@@ -33,8 +31,6 @@ private:
     QVideoWidget *videoWidget;
     Database *db = new Database();
 
-
-
 protected:
     void MainWindow::paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
@@ -42,18 +38,17 @@ public slots:
     void setActivePic(QImage img);
     void getPicture_Intervall();
     void changeLeftWidget(const int &num = 0);
+
+
     void Page4_DB_getFilepath();
     void Page4_BD_Name();
     void Page4_BD_Desc();
     void Page4_BD_Accept();
-
-    void Page4_DB_drawEntry(Entry e);
     void Page4_DB_drawEntry2(int row, int col);
+    void Page4_DB_drawEntry(Entry e);
     void Page4_DB_deleteDBEntry();
     void Page4_DB_saveToFile();
     void Page4_DB_loadFromFile();
-
-
 };
 
 #endif // MAINWINDOW_H

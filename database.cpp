@@ -12,7 +12,6 @@
 
 #include <opencv2/opencv.hpp>
 
-
 Database::Database()
 {
 
@@ -20,6 +19,30 @@ Database::Database()
 Entry Database::getCurrentEntry()
 {
     return curEnt;
+}
+int Database::getDbSize()
+{
+    return database.size();
+}
+std::vector<cv::Mat> Database::getDescriptor()
+{
+    std::vector <cv::Mat> vec;
+    if ( database.size() <= 0)
+    {
+        qWarning("keine Einträge in der Datenbank!");
+        throw 20;
+    }
+    else
+    {
+        Entry a;
+        for ( int i = 0 ; i < database.size() ; i++)
+        {
+
+            a = database.at(i);
+            vec.push_back( a.paraSURF.descriptor );
+        }
+    }
+    return vec;
 }
 void Database::prepareEntrySetName(QString Name)
 {

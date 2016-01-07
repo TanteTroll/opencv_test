@@ -20,7 +20,47 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">border-radius: 5px;</string>
+   <string notr="true">QWidget{
+    background-color: #CFCFCF;
+    border-radius: 15;
+
+}
+QGroupBox{
+    background-color: #9F99F9;
+    border-radius: 22;
+	border-width: 1px;
+    border-color: #000000;
+    border-style: solid;
+
+}
+
+QPushButton {
+    color: white;
+    background-color: QLinearGradient(
+		    x1: 0, y1: 0, x2: 0, y2: 1, 
+		    stop: 0 #000000, 
+		    stop: 1 #0A00A0);
+    border-width: 1px;
+    border-color: #000000;
+    border-style: solid;
+    border-radius: 7;
+    padding: 3px;
+}
+QPushButton:hover
+{
+    color: #DDDDDD;
+    border-width: 2px;
+}
+QPushButton:pressed
+{
+    background-color: QLinearGradient(
+		    x1: 0, y1: 0, x2: 0, y2: 1, 
+		    stop: 0 #222222, 
+		    stop: 1 #2A22A2);
+}
+
+
+</string>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonTextOnly</enum>
@@ -32,6 +72,9 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="9,3">
     <item>
      <widget class="QWidget" name="widget" native="true">
@@ -39,19 +82,6 @@
        <item>
         <widget class="QWidget" name="ContentWidget_Video" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_17">
-          <item>
-           <widget class="QLabel" name="label_caption">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>test</string>
-            </property>
-           </widget>
-          </item>
           <item>
            <widget class="QLabel" name="label_image">
             <property name="frameShadow">
@@ -120,8 +150,7 @@
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+                <string notr="true"/>
                </property>
                <layout class="QGridLayout" name="gridLayout_2">
                 <property name="sizeConstraint">
@@ -201,16 +230,17 @@ border-radius: 10px;</string>
                     <weight>75</weight>
                     <italic>true</italic>
                     <bold>true</bold>
+                    <kerning>true</kerning>
                    </font>
                   </property>
                   <property name="frameShape">
-                   <enum>QFrame::Box</enum>
+                   <enum>QFrame::NoFrame</enum>
                   </property>
                   <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
+                   <enum>QFrame::Plain</enum>
                   </property>
                   <property name="midLineWidth">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="text">
                    <string>SURF:</string>
@@ -255,7 +285,7 @@ border-radius: 10px;</string>
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: #F0F0F0;</string>
+                <string notr="true"/>
                </property>
                <property name="frameShape">
                 <enum>QFrame::NoFrame</enum>
@@ -286,17 +316,7 @@ border-radius: 10px;</string>
        <enum>Qt::NoContextMenu</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
-stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
-border-radius: 5px;
-
-
-QToolBox::tab:selected {
-color: black;
-}
-
-</string>
+       <string notr="true"/>
       </property>
       <property name="frameShape">
        <enum>QFrame::WinPanel</enum>
@@ -305,7 +325,7 @@ color: black;
        <enum>QFrame::Raised</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page_settings">
        <property name="geometry">
@@ -465,7 +485,7 @@ color: black;
          <x>0</x>
          <y>0</y>
          <width>204</width>
-         <height>615</height>
+         <height>619</height>
         </rect>
        </property>
        <attribute name="label">
@@ -490,20 +510,18 @@ color: black;
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="edges_hide_1" native="true">
+         <widget class="QGroupBox" name="edges_hide_1">
           <property name="autoFillBackground">
            <bool>false</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+           <string notr="true"/>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <widget class="QWidget" name="widget_6" native="true">
              <property name="styleSheet">
-              <string notr="true">background-color: #CFCAC9;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_15">
               <item>
@@ -551,8 +569,7 @@ border-radius: 10px;</string>
            <item>
             <widget class="QWidget" name="widget_10" native="true">
              <property name="styleSheet">
-              <string notr="true">background-color: #CFCAC9;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_16">
               <item>
@@ -605,20 +622,18 @@ border-radius: 10px;</string>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="edges_hide_2" native="true">
+         <widget class="QGroupBox" name="edges_hide_2">
           <property name="autoFillBackground">
            <bool>false</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+           <string notr="true"/>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="QWidget" name="widget_5" native="true">
              <property name="styleSheet">
-              <string notr="true">background-color: #CFCAC9;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
@@ -666,8 +681,7 @@ border-radius: 10px;</string>
            <item>
             <widget class="QWidget" name="widget_7" native="true">
              <property name="styleSheet">
-              <string notr="true">background-color: #CFCAC9;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <item>
@@ -712,8 +726,7 @@ border-radius: 10px;</string>
            <item>
             <widget class="QWidget" name="widget_8" native="true">
              <property name="styleSheet">
-              <string notr="true">background-color: #CFCAC9;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
@@ -761,8 +774,7 @@ border-radius: 10px;</string>
            <item>
             <widget class="QWidget" name="widget_9" native="true">
              <property name="styleSheet">
-              <string notr="true">background-color: #CFCAC9;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
               <item>
@@ -841,8 +853,7 @@ border-radius: 10px;</string>
         <item>
          <widget class="QToolBox" name="toolBox_2">
           <property name="styleSheet">
-           <string notr="true">background-color: #C5C5C5;
-border-radius: 5px;</string>
+           <string notr="true"/>
           </property>
           <property name="currentIndex">
            <number>1</number>
@@ -852,8 +863,8 @@ border-radius: 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>203</width>
-             <height>367</height>
+             <width>123</width>
+             <height>94</height>
             </rect>
            </property>
            <attribute name="label">
@@ -908,8 +919,8 @@ border-radius: 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>203</width>
-             <height>367</height>
+             <width>216</width>
+             <height>350</height>
             </rect>
            </property>
            <attribute name="label">
@@ -924,20 +935,18 @@ border-radius: 5px;</string>
              </widget>
             </item>
             <item>
-             <widget class="QWidget" name="surf_hide" native="true">
+             <widget class="QGroupBox" name="surf_hide">
               <property name="autoFillBackground">
                <bool>false</bool>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+               <string notr="true"/>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
                 <widget class="QWidget" name="widget_3" native="true">
                  <property name="styleSheet">
-                  <string notr="true">background-color: #CFCAC9;
-border-radius: 10px;</string>
+                  <string notr="true"/>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_6">
                   <item>
@@ -951,7 +960,7 @@ border-radius: 10px;</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSlider" name="slider">
+                   <widget class="QSlider" name="ObjectRec_nimHessian">
                     <property name="maximum">
                      <number>1000</number>
                     </property>
@@ -964,12 +973,119 @@ border-radius: 10px;</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="Edge_Treshold_label">
+                   <widget class="QLabel" name="ObjectRec_nimHessian_label">
                     <property name="styleSheet">
                      <string notr="true"/>
                     </property>
                     <property name="text">
                      <string>400</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWidget" name="widget_12" native="true">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_29">
+                  <item>
+                   <widget class="QLabel" name="label_7">
+                    <property name="text">
+                     <string>erkanntes Objekt:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="ObjectRec_pic">
+                    <property name="text">
+                     <string>[Bild]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="ObjectRec_Name">
+                    <property name="text">
+                     <string>[Name]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="ObjectRec_Disc">
+                    <property name="text">
+                     <string>[Beschreibung]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="ObjectRec_NumMatch">
+                    <property name="text">
+                     <string>Anzahl Übereinstimmungen [Zahl]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWidget" name="widget_13" native="true">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_31">
+                  <item>
+                   <widget class="QLabel" name="label_14">
+                    <property name="text">
+                     <string>Abstand Description Point</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSlider" name="ObjectRec_minDist">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>100</number>
+                    </property>
+                    <property name="value">
+                     <number>10</number>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="Edge_Treshold_label_2">
+                    <property name="styleSheet">
+                     <string notr="true"/>
+                    </property>
+                    <property name="text">
+                     <string>10</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -1007,7 +1123,7 @@ border-radius: 10px;</string>
          <x>0</x>
          <y>0</y>
          <width>204</width>
-         <height>486</height>
+         <height>495</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1022,7 +1138,7 @@ border-radius: 10px;</string>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget_13" native="true">
+         <widget class="QGroupBox" name="groupBox_13">
           <layout class="QVBoxLayout" name="verticalLayout_25">
            <item>
             <widget class="QWidget" name="widget_14" native="true">
@@ -1033,8 +1149,7 @@ border-radius: 10px;</string>
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_26">
               <item>
@@ -1066,9 +1181,7 @@ border-radius: 10px;</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: #323232;
-color: #FFFFFF;
-border-radius: 5px</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Delete</string>
@@ -1087,8 +1200,7 @@ border-radius: 5px</string>
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_27">
               <item>
@@ -1120,9 +1232,7 @@ border-radius: 10px;</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: #323232;
-color: #FFFFFF;
-border-radius: 5px</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Save to File</string>
@@ -1138,9 +1248,7 @@ border-radius: 5px</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: #323232;
-color: #FFFFFF;
-border-radius: 5px</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Load from File</string>
@@ -1164,7 +1272,7 @@ border-radius: 5px</string>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget_12" native="true">
+         <widget class="QGroupBox" name="groupBox_12">
           <layout class="QVBoxLayout" name="verticalLayout_21">
            <item>
             <widget class="QWidget" name="widget_2" native="true">
@@ -1175,8 +1283,7 @@ border-radius: 5px</string>
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_22">
               <item>
@@ -1195,9 +1302,7 @@ border-radius: 10px;</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: #323232;
-color: #FFFFFF;
-border-radius: 5px</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Select File</string>
@@ -1216,8 +1321,7 @@ border-radius: 5px</string>
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_23">
               <item>
@@ -1229,9 +1333,7 @@ border-radius: 10px;</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: #323232;
-color: #FFFFFF;
-border-radius: 5px</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>EntryName</string>
@@ -1253,9 +1355,7 @@ border-radius: 5px</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: #323232;
-color: #FFFFFF;
-border-radius: 5px</string>
+                 <string notr="true"/>
                 </property>
                 <property name="plainText">
                  <string>Beschreibung</string>
@@ -1274,8 +1374,7 @@ border-radius: 5px</string>
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: #C0C0C0;
-border-radius: 10px;</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_24">
               <item>
@@ -1296,12 +1395,7 @@ border-radius: 10px;</string>
                  <bool>false</bool>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: #323232;
-color: #FFFFFF;
-border-radius: 10px;
-
-
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Abschicken</string>
@@ -1352,42 +1446,21 @@ border-radius: 10px;
     </rect>
    </property>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections>
-  <connection>
-   <sender>slider</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>Edge_Treshold_label</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>769</x>
-     <y>270</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>769</x>
-     <y>289</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radio_edegs</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>surf_hide</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>820</x>
-     <y>134</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>787</x>
-     <y>226</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>box_Screenrefresh</sender>
    <signal>clicked(bool)</signal>
@@ -1405,18 +1478,50 @@ border-radius: 10px;
    </hints>
   </connection>
   <connection>
-   <sender>Harris_blovkSize</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>Harris_Treshold_label</receiver>
-   <slot>setNum(int)</slot>
+   <sender>Radio_Database</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_13</receiver>
+   <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>802</x>
-     <y>404</y>
+     <x>872</x>
+     <y>169</y>
     </hint>
     <hint type="destinationlabel">
-     <x>802</x>
-     <y>423</y>
+     <x>720</x>
+     <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_AddEntry</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_12</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>872</x>
+     <y>403</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>872</x>
+     <y>508</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_edegs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>edges_hide_1</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>732</x>
+     <y>131</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>732</x>
+     <y>144</y>
     </hint>
    </hints>
   </connection>
@@ -1427,60 +1532,28 @@ border-radius: 10px;
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>820</x>
-     <y>339</y>
+     <x>738</x>
+     <y>338</y>
     </hint>
     <hint type="destinationlabel">
-     <x>820</x>
-     <y>386</y>
+     <x>741</x>
+     <y>353</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>Harris_k</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>Harris_ratio_label_2</receiver>
+   <sender>ObjectRec_minDist</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Edge_Treshold_label_2</receiver>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>802</x>
-     <y>488</y>
+     <x>767</x>
+     <y>462</y>
     </hint>
     <hint type="destinationlabel">
-     <x>802</x>
-     <y>507</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Harris_NumberPoints</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>Harris_ratio_label_3</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>802</x>
-     <y>572</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>802</x>
-     <y>591</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Harris_treshhold</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>Harris_ratio_label_4</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>802</x>
-     <y>656</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>802</x>
-     <y>675</y>
+     <x>770</x>
+     <y>480</y>
     </hint>
    </hints>
   </connection>
@@ -1491,44 +1564,28 @@ border-radius: 10px;
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>787</x>
-     <y>205</y>
+     <x>741</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
-     <x>746</x>
-     <y>215</y>
+     <x>741</x>
+     <y>217</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>Radio_Database</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>widget_13</receiver>
-   <slot>setVisible(bool)</slot>
+   <sender>ObjectRec_nimHessian</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>ObjectRec_nimHessian_label</receiver>
+   <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>830</x>
-     <y>163</y>
+     <x>834</x>
+     <y>264</y>
     </hint>
     <hint type="destinationlabel">
-     <x>788</x>
-     <y>223</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radio_AddEntry</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>widget_12</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>768</x>
-     <y>285</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>767</x>
-     <y>298</y>
+     <x>836</x>
+     <y>280</y>
     </hint>
    </hints>
   </connection>

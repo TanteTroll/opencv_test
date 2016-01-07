@@ -7,6 +7,7 @@
 #include <QImage>
 #include <QTableWidget>
 
+
 struct  SURFparameter {
     std::vector<cv::KeyPoint> featurePoints;
     cv::Mat descriptor;
@@ -31,12 +32,14 @@ public:
     void prepareEntry(QString filename);
     void prepareEntrySetName(QString Name);
     void prepareEntrySetDescription(QString Desc);
+    std::vector < cv::Mat > getDescriptor();
 
     bool deleteDbEntry(int index);
 
     void paintDatabase(QTableWidget *tableWidget);
 
     Entry getCurrentEntry();
+    int getDbSize();
     Entry getEntry(int index);
 
     void saveToFile();
