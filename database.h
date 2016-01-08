@@ -27,30 +27,32 @@ class Database
 
 public:
     Database();
+
     void loadDB();
-    void addEntry();
+
     void prepareEntry(QString filename);
     void prepareEntrySetName(QString Name);
     void prepareEntrySetDescription(QString Desc);
-    std::vector < cv::Mat > getDescriptor();
 
-    bool deleteDbEntry(int index);
+    void addEntry();
+    bool deleteEntry(int index);
 
     void paintDatabase(QTableWidget *tableWidget);
 
+    void saveToFile();
+
+    std::vector < cv::Mat > getDescriptor();
     Entry getCurrentEntry();
     int getDbSize();
     Entry getEntry(int index);
 
-    void saveToFile();
-
 private:
-    bool entryPrepared;
+    bool entryPrepared_;
 
-    std::vector < Entry > database;
+    std::vector < Entry > database_;
 
-    Entry curEnt;
-    ObjectRecog* ore = new ObjectRecog();
+    Entry curEnt_;
+    ObjectRecog *ore_ = new ObjectRecog();
 
 };
 

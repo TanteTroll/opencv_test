@@ -20,15 +20,18 @@ SOURCES += main.cpp\
     convert.cpp \
     filter.cpp \
     objectrecog.cpp \
-    database.cpp
+    database.cpp \
+    debugform.cpp
 
 HEADERS  += mainwindow.h \
     convert.h \
     filter.h \
     objectrecog.h \
-    database.h
+    database.h \
+    debugform.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    debugform.ui
 
 
 
@@ -38,9 +41,12 @@ RESOURCES += \
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../opencv/build_new/lib/ -lopencv_core310 \
--lopencv_features2d310 -lopencv_highgui310 -lopencv_xfeatures2d310 -lopencv_imgproc310 -lopencv_flann310
+-lopencv_features2d310 -lopencv_highgui310 -lopencv_xfeatures2d310 -lopencv_imgproc310 -lopencv_flann310 \
+-lopencv_cudafeatures2d310
 
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../opencv/build_new/lib/ -lopencv_core310d
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../opencv/build_new/lib/ -lopencv_core310d \
+-lopencv_features2d310d -lopencv_highgui310d -lopencv_xfeatures2d310d -lopencv_imgproc310d -lopencv_flann310d \
+-lopencv_cudafeatures2d310d
 else:unix: LIBS += -L$$PWD/../../../../opencv/build_new/lib/ -lopencv_core310
 
 INCLUDEPATH += $$PWD/../../../../opencv/build_new/install/include

@@ -9,6 +9,7 @@
 #include <QCameraViewfinder>
 
 #include <opencv2/opencv.hpp>
+#include <debugform.h>
 
 namespace Ui {
 class MainWindow;
@@ -30,7 +31,8 @@ private:
     QCameraImageCapture *imageCapture;
     QVideoWidget *videoWidget;
     Database *db = new Database();
-
+    ObjectRecog* objre = new ObjectRecog();
+    DebugForm debForm;
 protected:
     void MainWindow::paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
@@ -39,6 +41,7 @@ public slots:
     void getPicture_Intervall();
     void changeLeftWidget(const int &num = 0);
 
+    void Debug_showWindow();
 
     void Page4_DB_getFilepath();
     void Page4_BD_Name();
@@ -49,6 +52,8 @@ public slots:
     void Page4_DB_deleteDBEntry();
     void Page4_DB_saveToFile();
     void Page4_DB_loadFromFile();
+    void Page4_DB_switchToNewEntry(bool b);
+
 };
 
 #endif // MAINWINDOW_H

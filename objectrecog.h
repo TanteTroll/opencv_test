@@ -12,25 +12,38 @@ enum FeatureMode {SURF};
 enum PaintMode {ALL, NONE, FPOINT, MATCHES};
 
 
-
-class ObjectRecog
+class ObjectRecog: public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
+    struct goodMatchEntry
+    {
+        int object_index;
+        cv::DMatch macht_point;
+        int object_size;
+    };
+
+    double timeDetectCompute;
+    double timeDetectCompute_draw;
+    double timeMatching;
+    double timeMatching_sort;
+    double timeMatching_paint;
+
     explicit ObjectRecog();
 
     void setPicture(QImage pic);
     void setPicture(cv::Mat img);
     void setPaintMode(PaintMode Mode);
     void setFeatureMode(FeatureMode Mode);
-    void setMinHessian(int minH);
     void setMinDist(double input);
 
-    int getPositionOfGoodMatch(int index, std::vector< cv::DMatch > *Hits);
+    int getPositionOfGoodMatch(int index, std::vector<cv::DMatch> *Hits);
     int getPositionOfGoodMatch(int index);
     QImage getPic_video();
     QImage getPic_feature();
+
+
     std::vector<cv::KeyPoint> getKeypoints();
     cv::Mat getDescriptor();
 
@@ -38,10 +51,9 @@ public:
     cv::Mat calcGrayscale(cv::Mat img);
     void calcFeature();
     void searchInDB(std::vector < cv::Mat > object_descriptors );
-    std::vector< std::vector< std::pair <int , cv::DMatch> > > goodMatches;
+    std::vector< std::vector< ObjectRecog::goodMatchEntry > > goodMatches;
 
 private:
-    int minHessian = 400;
     FeatureMode FMode = SURF;
     PaintMode PMode = ALL;
 
@@ -55,7 +67,10 @@ private:
     std::vector<cv::KeyPoint> keypoints_scene;
     cv::Mat descriptors_scene;
 
+
 signals:
+    void sigGooMatches(std::vector< std::vector< ObjectRecog::goodMatchEntry > > vec);
+
 
 public slots:
 

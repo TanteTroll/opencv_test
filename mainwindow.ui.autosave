@@ -358,7 +358,7 @@ QToolBox {
        <enum>QFrame::Raised</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page_settings">
        <property name="geometry">
@@ -534,7 +534,7 @@ QToolBox {
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-154</y>
          <width>313</width>
          <height>619</height>
         </rect>
@@ -914,8 +914,8 @@ QToolBox {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>123</width>
-             <height>94</height>
+             <width>310</width>
+             <height>363</height>
             </rect>
            </property>
            <attribute name="label">

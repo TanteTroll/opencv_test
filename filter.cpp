@@ -14,6 +14,8 @@ Filter::Filter(QImage img)
     this->input_qt = img;
     this->input_cv = convert::qimg2mat(img);
 }
+
+
 void Filter::setImg(QImage img)
 {
     this->input_qt = img;
@@ -30,40 +32,40 @@ QImage Filter::edgeDetection(int lowThreshold, int ratio, int kernel_size)
     //Input Control
     if (kernel_size>ratio)kernel_size=ratio;
 
+
     //greyscale
     makeGreyscale();
+
 
     //detection
     cv::Mat detected_edges;
     cv::blur( greyscale, detected_edges, cv::Size(3,3) );
     cv::Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
     detected_edges.copyTo(edgeDetect);
+
+
     //convert back
     cv::cvtColor(detected_edges,detected_edges,CV_GRAY2RGB);
     QImage filtered_image;
     filtered_image = convert::mat2qimg(detected_edges);
 
+
     //output
     return filtered_image;
 }
-QImage Filter::HarrisCorner(int blockSize, double k, int tresh, int displayedPoints)
+QImage Filter::harrisCorner(int blockSize, double k, int tresh, int displayedPoints)
 {
     makeGreyscale();
     cv::Mat dst,dst_norm,dst_norm_scaled;
     int apertureSize=3;
-/*
-    qDebug() <<"apertureSize"<< apertureSize;
-    qDebug() <<"blockSize"<< blockSize;
-    qDebug() <<"k"<< k;
-    qDebug() <<"displayedPoints"<< displayedPoints;
-*/
+
     cv::cornerHarris( greyscale, dst, blockSize, apertureSize, k, cv::BORDER_DEFAULT );
 
     cv::normalize( dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat() );
 
     cv::convertScaleAbs( dst_norm, dst_norm_scaled );
 
-    //Draw cirvles
+    //Draw circles
     int drawenCircles = 0;
     for( int j = 0; j < dst_norm.rows ; j++ )
     { for( int i = 0; i < dst_norm.cols; i++ )

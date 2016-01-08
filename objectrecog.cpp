@@ -5,10 +5,14 @@
 #include "opencv2/xfeatures2d/nonfree.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "convert.h"
+#include "opencv2/cudafeatures2d.hpp"
+#include <QElapsedTimer>
+#include <QDebug>
 
-bool sortBySize(const std::vector< std::pair <int , cv::DMatch> > &lhs,
-                const std::vector< std::pair <int , cv::DMatch> > &rhs)
-{ return lhs.size() < rhs.size(); }
+bool sortBySize(const std::vector< ObjectRecog::goodMatchEntry > &lhs,
+                const std::vector< ObjectRecog::goodMatchEntry > &rhs)
+{ return    ( static_cast<double>(lhs.size())/static_cast<double>(lhs.at(0).object_size) )
+            > static_cast<double>(rhs.size()/static_cast<double>(rhs.at(0).object_size)); }
 
 ObjectRecog::ObjectRecog()
 {
@@ -32,15 +36,7 @@ void ObjectRecog::setPaintMode(PaintMode Mode)
 {
     PMode = Mode;
 }
-void ObjectRecog::setMinHessian(int inputMinHessian)
-{
-    if (inputMinHessian > 0)
-    {
-        qWarning("Invalid MinHessian");
-        return;
-    }
-    minHessian = inputMinHessian;
-}
+
 QImage ObjectRecog::getPic_feature()
 {
     return pic_feature;
@@ -76,6 +72,8 @@ void ObjectRecog::setMinDist(double input)
 
 void ObjectRecog::calcFeature()
 {
+    QElapsedTimer timer;
+
     /// Input-Test
     if (pic_video.isNull())
     {   qWarning("Input Picture not set!");
@@ -83,15 +81,22 @@ void ObjectRecog::calcFeature()
     }
 
     switch (FMode)
-        case SURF:
+    case SURF:
     {
         using namespace cv::xfeatures2d;
-        calcGrayscale();
+
+
+        calcGrayscale();//Umwadlung Bild in Grayscale
 
         cv::Ptr<cv::FeatureDetector> detector = SURF::create();
+
+        timer.start(); //Timer für Berechnungsdauer
+
         detector->detectAndCompute(cv_grayscale, cv::noArray(), keypoints_scene, descriptors_scene);
 
-        if (PMode == FPOINT || PMode == ALL)
+        timeDetectCompute = timer.elapsed(); // Ende timer ohne Bild
+
+        if (PMode == FPOINT || PMode == ALL)//Ausgabe des Video
         {
             cv::Mat draw;
             drawKeypoints(cv_grayscale, keypoints_scene, draw , 1, 4 );
@@ -99,9 +104,11 @@ void ObjectRecog::calcFeature()
         }
 
     }
+    timeDetectCompute_draw = timer.elapsed(); // Ende timer mit Bild
 }
 void ObjectRecog::searchInDB(std::vector < cv::Mat > object_descriptors)
 {
+    //Input tests
     if ( object_descriptors.empty() )
     {
        qWarning("OBJECT descriptor empty");
@@ -112,70 +119,96 @@ void ObjectRecog::searchInDB(std::vector < cv::Mat > object_descriptors)
        qWarning("SZENE descriptor empty");
        return;
     }
-    goodMatches.clear();
+    goodMatches.clear(); //Löschen der alten Werte
 
+
+    std::vector< std::vector< cv::DMatch > > matches; //alle gefundenen Übereinstimmungen
+    std::vector< ObjectRecog::goodMatchEntry > goodMatchesTmp; //alle Übereinstimmungen mit bestimmtem Abstand
+    QElapsedTimer timer;
     cv::FlannBasedMatcher matcher;
-    std::vector< std::vector< cv::DMatch > > matches;
-    std::vector< std::pair <int , cv::DMatch> > goodMatchesTmp;
+    //cv::Ptr< cv::cuda::DescriptorMatcher > matcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_L2);;
 
+
+    //matching point für alle Objekte berechnen
+    timer.start(); //timer für dauer der Berechnung
     for ( int i = 0; i < object_descriptors.size() ; i++)
     {
-        cv::Mat object_descriptor = object_descriptors.at(i);
-        if ( object_descriptors.empty() )
+        //Input
+        cv::Mat object_descriptor = object_descriptors.at(i); //auswhal des aktuellen Objektes
+        if ( object_descriptors.empty() ) //test der Auswahl
         {
            cvError(0,"MatchFinder","OBJECT descriptor empty",__FILE__,__LINE__);
            continue;
         }
-        std::vector< cv::DMatch > match;
 
-        matcher.match( object_descriptor, descriptors_scene, match );
+
+        //matching
+        std::vector< cv::DMatch > match;
+        matcher.match( object_descriptor, descriptors_scene, match ); //vergleich mit aktueller Szene
         matches.push_back(match);
 
-        for( int j = 0; j < object_descriptors.at(i).rows; j++ )
-        {
 
-            if( matches[i][j].distance < .03*min_dist )
+        // gute Punkte auswählen
+        for( int j = 0; j < object_descriptor.rows; j++ ) //alle matches auf Abstand kontrollieren
+        {
+            if( match[j].distance < .01*min_dist )
             {
-                std::pair <int , cv::DMatch> pairEntry;
-                pairEntry.first = i;
-                pairEntry.second = matches[i][j];
-                goodMatchesTmp.push_back( pairEntry);
+                ObjectRecog::goodMatchEntry gmEntry;
+                gmEntry.macht_point = match[j];
+                gmEntry.object_index = i;
+                gmEntry.object_size = object_descriptor.rows;
+                goodMatchesTmp.push_back( gmEntry );
             }
         }
+
+
+        // werte speichern
         if (!goodMatchesTmp.empty())
-            goodMatches.push_back(goodMatchesTmp);
+        {
+            goodMatches.push_back(goodMatchesTmp); //Speichern im Vektor
+            goodMatchesTmp.clear();
+        }
     }
+    timeMatching = timer.elapsed(); //stop den Tiemr
 
-    std::sort(goodMatches.begin(), goodMatches.end() , sortBySize );
 
+    // matching points nach qualität sortieren
+    std::sort(goodMatches.begin(), goodMatches.end() , sortBySize ); //sortieren nach Qualitär der Funde
+    timeMatching_sort = timer.elapsed();
+    emit sigGooMatches(goodMatches);
+
+
+    //Ausabe video
     if (PMode == MATCHES || PMode == ALL)
     {
        //TODO
     }
+    timeMatching_paint = timer.elapsed();
 
 }
 int ObjectRecog::getPositionOfGoodMatch(int index, std::vector<cv::DMatch> *Hits)
 {
     if (goodMatches.empty()) return -1;
 
-    std::vector< std::pair <int , cv::DMatch> > match;
+    std::vector< ObjectRecog::goodMatchEntry > match;
     match = goodMatches.at(index);
 
     Hits->empty();
     for ( int i = 0 ; i < match.size() ; i++)
     {
-        cv::DMatch matchTmp = match.at(i).second;
+        cv::DMatch matchTmp = match.at(i).macht_point;
         Hits->push_back(matchTmp);
     }
 
-    return match.at(0).first;
+    return match.at(0).object_index;
 }
 int ObjectRecog::getPositionOfGoodMatch(int index)
 {
     if (goodMatches.empty()) return -1;
-    std::vector< std::pair <int , cv::DMatch> > match;
+    std::vector< ObjectRecog::goodMatchEntry > match;
 
     match = goodMatches.at(index);
 
-    return match.at(0).first;
+    return match.at(0).object_index;
 }
+

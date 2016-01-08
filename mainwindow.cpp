@@ -6,6 +6,8 @@
 #include "filter.h"
 #include "objectrecog.h"
 #include "database.h"
+#include "ui_debugform.h"
+#include "debugform.h"
 
 #include <opencv2/opencv.hpp>
 #include <QImage>
@@ -17,18 +19,21 @@
 #include <QVideoWidget>
 #include <QFileDialog>
 #include <QString>
+#include <QElapsedTimer>
+#include <QDebug>
 
 /// <summary>
 /// Initialisiert das GUI
 /// </summary>
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    //Init Database
+    db->loadDB();
     //Init Visibility
     ui->setupUi(this);
     ui->edges_hide_1->setVisible(false);
     ui->edges_hide_2->setVisible(false);
-    ui->surf_hide->setVisible(false);
-    ui->groupBox_13->setVisible(false);
+    ui->groupBox_12->setVisible(false);
 
     this->changeLeftWidget(ui->toolBox->currentIndex());
 
@@ -51,6 +56,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             this, &MainWindow::Page4_DB_saveToFile);
     connect(ui->ButtonDB_LoadFromFile,&QPushButton::clicked,
             this, &MainWindow::Page4_DB_loadFromFile);
+    connect(ui->radio_AddEntry, &QRadioButton::toggled,
+            this, &MainWindow::Page4_DB_switchToNewEntry);
+    connect(ui->pushButton_showDebugUi, &QRadioButton::clicked,
+            this, &MainWindow::Debug_showWindow);
+
+
 
 
     // Init Kamera
@@ -67,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         //Timer für Kameraaufnahme
         QTimer::singleShot( 200, this, SLOT( getPicture_Intervall(  ) ) );
     }
+
+
 }
 
 MainWindow::~MainWindow()
@@ -90,6 +103,14 @@ void MainWindow::getPicture_Intervall( )
         setActivePic( videoWidget->grab().toImage() );
     QTimer::singleShot(ui->fspAuswahl->value(), this, SLOT(getPicture_Intervall( )));
 }
+void MainWindow::Page4_DB_switchToNewEntry(bool b)
+{
+
+    if(b)
+    {
+        this->Page4_DB_drawEntry2(-1,1);
+    }
+}
 
 void MainWindow::changeLeftWidget(const int &num )
 // für Hauptfenster abhängig von ausgewählter Seite
@@ -105,6 +126,7 @@ void MainWindow::changeLeftWidget(const int &num )
         case 3:
             ui->ContentWidget_Data->setVisible(true);
             ui->ContentWidget_Video->setVisible(false);
+            db->paintDatabase(ui->tableWidget);
         break;
         default:
             ui->ContentWidget_Data->setVisible(false);
@@ -169,8 +191,15 @@ void MainWindow::Page4_DB_drawEntry(Entry e)
 void MainWindow::Page4_DB_drawEntry2(int row, int col)
 //einzelnen Eintrag aus Datenbank anzeigen
 {
-    if (ui->Radio_Database->isChecked())
+    if (row < 0)
     {
+        //draw empty Entry
+        Entry a;
+        this->Page4_DB_drawEntry(a);
+    }
+    else if (ui->Radio_Database->isChecked())
+    {
+        //draw selected Entry
         Page4_DB_drawEntry(db->getEntry(row));
         ui->deleteFileNumber->setText(QString::number(row));
     }
@@ -181,7 +210,7 @@ void MainWindow::Page4_DB_deleteDBEntry()
 {
     int index = ui->deleteFileNumber->text().toInt();
     if ( index > 0 && index < db->getDbSize())
-        if (db->deleteDbEntry(index))
+        if (db->deleteEntry(index))
             ui->tableWidget->removeRow(index);
 }
 
@@ -197,14 +226,14 @@ void MainWindow::Page4_DB_loadFromFile()
 }
 void MainWindow::setActivePic(QImage img)
 {
+    QElapsedTimer timer;
+    timer.start();
     //Bildaufnahme
     ui->Label_Rotation_display->setText(QString::number(ui->Rotate_image->value()*90)+"°");
     img = convert::rotate_cw(img, ui->Rotate_image->value()*90);
 
     //Bildverarbeitung
-    ///Filter
-    /// Filter über das Bild gelegt
-    /// ohne weitere Intragktion
+
     if (ui->page_filter->isVisible()  )
     {
         static Filter fil(img);
@@ -217,7 +246,7 @@ void MainWindow::setActivePic(QImage img)
         if(ui->radio_harris->isChecked())
         {
             fil.setImg(img);
-            img = fil.HarrisCorner(
+            img = fil.harrisCorner(
                         ui->Harris_blovkSize->value(),
                         (double)ui->Harris_k->value()/100.0,
                         ui->Harris_treshhold->value(),
@@ -227,16 +256,14 @@ void MainWindow::setActivePic(QImage img)
     }
     ///Objekterkennung
     /// mit Datenbankabgleich
+
     if (ui->page_objektrec->isVisible()  )
     {
-
-        static ObjectRecog* objre = new ObjectRecog();
         objre->setPicture(img);
         objre->setMinDist(ui->ObjectRec_minDist->value());
-        objre->setMinHessian(ui->ObjectRec_nimHessian->value());
         objre->calcGrayscale();
+
         objre->calcFeature();
-        db->loadDB();
         objre->searchInDB(db->getDescriptor());
         img = objre->getPic_feature();
 
@@ -252,19 +279,30 @@ void MainWindow::setActivePic(QImage img)
         }
         else
         {
+
             Entry ent;
             ent = db->getEntry(posOfMatch);
             ui->ObjectRec_Name->setText(ent.name);
             ui->ObjectRec_Disc->setText(ent.data);
             ui->ObjectRec_pic->setVisible(true);
-            ui->ObjectRec_pic->setPixmap(QPixmap::fromImage(ent.icon));
+            ui->ObjectRec_pic->setPixmap(QPixmap::fromImage(ent.icon).scaledToWidth(100));
             ui->ObjectRec_NumMatch->setText("Anzahl Übereinstimmungen: " + QString::number(Hits->size()));
+            ui->ObjectRec_timeFP_label->setText(QString::number(objre->timeDetectCompute));
+            ui->ObjectRec_timeFPPaint_label->setText(QString::number(objre->timeDetectCompute_draw));
+            ui->ObjectRec_timeMatch->setText(QString::number(objre->timeMatching));
+            ui->ObjectRec_timeMatchSort->setText(QString::number(objre->timeMatching_sort));
         }
 
     }
     //Bildausgabe
     MainWindow::aktivesBild = img;
     ui->label_image->setPixmap(QPixmap::fromImage(img));
+}
+void MainWindow::Debug_showWindow()
+{
+    debForm.show();
+    connect(objre, &ObjectRecog::sigGooMatches,
+            &debForm, &DebugForm::printGoodMatches);
 }
 
 
