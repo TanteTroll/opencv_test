@@ -209,7 +209,7 @@ void MainWindow::Page4_DB_deleteDBEntry()
 // Datenbankeintrag löschen, (atm. :index aus ui)
 {
     int index = ui->deleteFileNumber->text().toInt();
-    if ( index > 0 && index < db->getDbSize())
+    if ( index >= 0 && index < db->getDbSize())
         if (db->deleteEntry(index))
             ui->tableWidget->removeRow(index);
 }
