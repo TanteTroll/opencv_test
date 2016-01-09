@@ -88,7 +88,7 @@ void ObjectRecog::calcFeature()
 
         calcGrayscale();//Umwadlung Bild in Grayscale
 
-        cv::Ptr<cv::FeatureDetector> detector = SURF::create();
+        cv::Ptr<cv::FeatureDetector> detector = SURF::create(1200);
 
         timer.start(); //Timer für Berechnungsdauer
 

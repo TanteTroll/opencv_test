@@ -358,7 +358,7 @@ QToolBox {
        <enum>QFrame::Raised</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page_settings">
        <property name="geometry">
@@ -1081,7 +1081,7 @@ QToolBox {
                      <number>100</number>
                     </property>
                     <property name="value">
-                     <number>40</number>
+                     <number>30</number>
                     </property>
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
